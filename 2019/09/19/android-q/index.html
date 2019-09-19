@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="Author Name,name@example.com"><title> · 段宇鹏</title><meta name="description" content="Android Q适配_外部存储空间SDcard视图的变化在AndroidQ之前，SDcard在程序员眼中的视图叫做legacy view，视图如下：
+
+
+androidQ重新设计后SDcard后，在程序员的眼中的视图改为filtered view，视图如下
+
+
+可以从filtered view看出"><meta name="keywords" content="Hexo,HTML,CSS,android,Linux"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/blog/css/style.css"><link rel="stylesheet" href="/blog/css/blog_basic.css"><link rel="stylesheet" href="/blog/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/blog/images/logo@2x.png" style="width:127px;"><h3 title><a href="/">段宇鹏</a></h3><div class="description"><p>你想成为什么样的人 在一年后</p></div></div></div><ul class="social-links"></ul><div class="footer"><a target="_blank" href="/"><span>Theme by </span></a><a href="https://www.caicai.me"> CaiCai </a><span>&</span><a href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div><div class="avatar"><img src="/blog/images/favicon.png"></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a></a></h3></div><div class="post-content"><h1 id="Android-Q适配-外部存储空间"><a href="#Android-Q适配-外部存储空间" class="headerlink" title="Android Q适配_外部存储空间"></a>Android Q适配_外部存储空间</h1><h2 id="SDcard视图的变化"><a href="#SDcard视图的变化" class="headerlink" title="SDcard视图的变化"></a>SDcard视图的变化</h2><p>在AndroidQ之前，SDcard在程序员眼中的视图叫做<strong>legacy view</strong>，视图如下：</p>
+<img src="/blog/2019/09/19/android-q/sdcard_legacy.png" title="legacy">
+
+<p>androidQ重新设计后SDcard后，在程序员的眼中的视图改为<strong>filtered view</strong>，视图如下</p>
+<img src="/blog/2019/09/19/android-q/sdcard_filtered.png" title="legacy">
+
+<p>可以从<strong>filtered view</strong>看出，在android q之后，将SDCard区域划分为了public与app-specific两大地盘，其中public地盘顾名思义，为所有app公用的区域。app-specific地盘顾名思义，是app自己的私人领土，有些资料将这些区域称作<code>沙箱</code>。<br>之所以划分出了两个虚拟的地盘概念，为的也是帮助用户更好的管理文件。</p>
+<p>Google的这两种(public&amp;app-specific)强行分类算是对文件的一种整理，当然不仅仅只是分类，这两个概念在文件系统中也有各自的特点，随后会依次做介绍。</p>
+<p>首先介绍一个::很重要的特点::：</p>
+<ul>
+<li>公共目录下的文件不会随着app的卸载而删除</li>
+<li>app-specific目录下的文件会随着对应app卸载而删除</li>
+</ul>
+<p>看到这里你一定很好奇，公共目录下的文件有哪些，哪些文件属于app-specific。接下来我们看下android Q的分类规则</p>
+<h2 id="filtered的分类规则"><a href="#filtered的分类规则" class="headerlink" title="filtered的分类规则"></a>filtered的分类规则</h2><h3 id="公共目录"><a href="#公共目录" class="headerlink" title="公共目录"></a>公共目录</h3><p>我们之前看的公共目录如下</p>
+<img src="/blog/2019/09/19/android-q/公共目录.png" title="legacy">
+
+<p>很现实，改目录的文件比较杂乱，Google对公共目录下的文件又再分为了两类，media与non-media，意思为媒体与非媒体。媒体包括图片，音频，视频。其他的文件类型都属于非媒体。</p>
+<img src="/blog/2019/09/19/android-q/公共目录二次分类.png" title="legacy">
+
+
+<h3 id="私有目录"><a href="#私有目录" class="headerlink" title="私有目录"></a>私有目录</h3><img src="/blog/2019/09/19/android-q/私有目录.png" title="legacy">
+
+<p>如何app的内部存储一样，外部存储sdcard中也拥有了app自己的沙盒。</p>
+<p>私有目录为<br><code>/sdcard/android/data/com.nicomama.niangaomama</code></p>
+<p>顺便提一下，内部存储的目录为<br><code>/data/data/com.nicomama.niangaomama</code></p>
+<h2 id="访问权限的变更"><a href="#访问权限的变更" class="headerlink" title="访问权限的变更"></a>访问权限的变更</h2><p>我们在回顾下之前sdcard的访问权限：</p>
+<img src="/blog/2019/09/19/android-q/老_访问权限.png" title="legacy">
+
+<p>拥有了读写权限就拥有sdcard的钥匙可以在任何文件下操作，但该方式从androidQ开始边不再允许了，如下图：</p>
+<img src="/blog/2019/09/19/android-q/新_访问权限.png" title="legacy">
+
+<p>public目录需要读写权限，app-sepecific目录下的文件不需要申请权限</p>
+<p>在访问public目录下的文件时，如果不加读写权限，会抛出<code>SecurityException</code>异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.SecurityException: Permission Denial: reading com.android.providers.media.MediaProvider uri content://media/external/images/media from pid=29505, uid=10284 requires android.permission.READ_EXTERNAL_STORAGE</span><br></pre></td></tr></table></figure>
+
+<h2 id="访问方式的变更"><a href="#访问方式的变更" class="headerlink" title="访问方式的变更"></a>访问方式的变更</h2><h3 id="访问app-specific的方式"><a href="#访问app-specific的方式" class="headerlink" title="访问app-specific的方式"></a>访问app-specific的方式</h3><p>使用绝对路径直接访问</p>
+<h3 id="访问public的方式"><a href="#访问public的方式" class="headerlink" title="访问public的方式"></a>访问public的方式</h3><p>不允许使用绝对路径访问<br>对于public下的media文件，可以用MediaStore于SAF两种方式访问，对于non-media文件，只能使用SAF的方式进行访问</p>
+<img src="/blog/2019/09/19/android-q/新_访问方式_公共目录.png" title="legacy">
+
+
+<h2 id="MediaStore"><a href="#MediaStore" class="headerlink" title="MediaStore"></a>MediaStore</h2><p>首先要知道android中把内部存储，外部存储的文件信息存放在external.db与internal.db这两个多媒体数据库中，数据库目录为下面的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/data/data/com.android.providers.media/databases/external.db</span><br></pre></td></tr></table></figure>
+
+<p>下方的external数据中的files表中存放了多媒体与非多媒体信息，有68列的信息描述</p>
+<img src="/blog/2019/09/19/android-q/android数据库.png" title="legacy">
+
+<p>Android提供的::MediaProvider::暴露了对文件的增删改查接口，其中::MediaStore::提供了文件元数据的引用，提供的这些引用让我们可以方便的使用ContentResolver并且达到操作MediaProvider的目的</p>
+<p>以下这些类中还包含了多个类的信息，这些也是我们操作常用的类</p>
+<ul>
+<li>MediaStore.Images<br>图片内容容器</li>
+<li>MediaStore.Video<br>视频内容容器</li>
+<li>MediaStore.Audio<br>音频内容容器</li>
+</ul>
+<p>具体操作自行查询</p>
+<p>提供一张MediaStore中Uri引用与实际手机目录的对应关系表</p>
+
+
+
+
+<h2 id="SAF"><a href="#SAF" class="headerlink" title="SAF"></a>SAF</h2><p>系统的文件选择解决方案，该方案包含了ui界面</p>
+<p>具体操作自行查询</p>
+<h2 id="资料链接"><a href="#资料链接" class="headerlink" title="资料链接"></a>资料链接</h2><ol>
+<li><p><a href="https://mp.weixin.qq.com/s/aiDMyAfAZvaYIHuIMLAlcg" target="_blank" rel="noopener">oppo适配指南</a></p>
+</li>
+<li><p>华为适配指南</p>
+
+
+	<div class="row">
+    <embed src="./安卓Q版本兼容性适配指导v2.3.pdf" width="100%" height="550" type="application/pdf">
+	</div>
+
+
+
+
+
+</li>
+</ol>
+<h2 id="年糕的存储目录"><a href="#年糕的存储目录" class="headerlink" title="年糕的存储目录"></a>年糕的存储目录</h2><ul>
+<li>社区目录</li>
+</ul>
+<p>Android/data/包名/cache/post/cut    保存裁剪图片目录<br>Android/data/包名/cache/post/compress    保存压缩图片目录<br>Android/data/包名/cache/takephoto/xxx.jpg  拍照保存目录</p>
+<p>#原创文章</p>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2019-09-19</span><i class="fa fa-tag"></i></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,https://danielyp.github.io/blog/2019/09/19/android-q/,段宇鹏,,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a class="btn" role="navigation" href="/blog/2019/09/14/序/" title="序">下一篇</a></li></ul></div></div></div></div></div><script src="/blog/js/jquery.js"></script><script src="/blog/js/jquery-migrate-1.2.1.min.js"></script><script src="/blog/js/jquery.appear.js"></script></body></html>
